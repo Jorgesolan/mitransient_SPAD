@@ -207,14 +207,14 @@ class TransientADIntegrator(ADIntegrator):
         film.prepare_transient(size=size, rfilter=filters)
         self._film = film
 
-    def add_transient_f(self, pos, ray_weight, sample_scale):
+    def add_transient_f(self, pos, sampler, ray_weight, sample_scale):
         """
         Return a lambda function for saving transient samples.
         It pre-multiplies the sample scale.
         """
         return (
             lambda spec, distance, wavelengths, active: self._film.add_transient_data(
-                spec * sample_scale, distance, wavelengths, active, pos, ray_weight
+                spec * sample_scale, sampler, distance, wavelengths, active, pos, ray_weight
             )
         )
 
@@ -267,7 +267,7 @@ class TransientADIntegrator(ADIntegrator):
                     active=mi.Bool(True),
                     max_distance=self._film.end_opl(),
                     add_transient=self.add_transient_f(
-                        pos=pos, ray_weight=ray_weight, sample_scale=1.0 / total_spp
+                        pos=pos, sampler=sampler, ray_weight=ray_weight, sample_scale=1.0 / total_spp
                     ),
                 )
 
